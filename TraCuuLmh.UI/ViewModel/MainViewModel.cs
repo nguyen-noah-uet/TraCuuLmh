@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Syncfusion.XlsIO;
 using System.Collections.ObjectModel;
 using TraCuuLmh.UI.Model;
 using TraCuuLmh.UI.Service;
@@ -10,7 +11,8 @@ namespace TraCuuLmh.UI.ViewModel;
 public partial class MainViewModel : BaseViewModel
 {
 	private readonly DataService _dataService;
-	public ObservableCollection<SinhvienLmh> SinhVienCollection { get; set; } = new();
+	private ICollection<SinhvienLmh> _sinhVienCollection;
+	public ObservableCollection<SinhvienLmh> SinhVienObservableCollection { get; set; } = new();
 	public ObservableCollection<Term> Terms { get; set; } = new();
 
 	[ObservableProperty]
@@ -47,21 +49,19 @@ public partial class MainViewModel : BaseViewModel
 		try
 		{
 			IsBusy = true;
-			SinhVienCollection.Clear();
-			if (Term is null)
-			{
-				Term = Terms.Last();
-			}
+			_sinhVienCollection.Clear();
+			SinhVienObservableCollection.Clear();
+			Term ??= Terms.Last();
 
 			if (string.IsNullOrEmpty(PageSize))
 			{
 				PageSize = "100";
 			}
 
-			var list = await _dataService.GetData(_studentId, _subjectId, _studentName, _subjectName, _term.TermId, Parse(_pageSize));
-			foreach (var sinhvienLmh in list)
+			_sinhVienCollection = await _dataService.GetData(_studentId, _subjectId, _studentName, _subjectName, _term.TermId, Parse(_pageSize));
+			foreach (var sinhvienLmh in _sinhVienCollection)
 			{
-				SinhVienCollection.Add(sinhvienLmh);
+				SinhVienObservableCollection.Add(sinhvienLmh);
 			}
 		}
 		catch (Exception)
@@ -70,7 +70,7 @@ public partial class MainViewModel : BaseViewModel
 		}
 		finally
 		{
-			Notification = $"Tìm thấy {SinhVienCollection?.Count} kết quả.";
+			Notification = $"Tìm thấy {SinhVienObservableCollection?.Count} kết quả.";
 			IsBusy = false;
 		}
 
@@ -96,10 +96,40 @@ public partial class MainViewModel : BaseViewModel
 			IsAdvancedMode = false;
 		}
 	}
+	[RelayCommand]
+	public async Task SaveToExcel()
+	{
+		using (ExcelEngine excelEngine = new ExcelEngine())
+		{
+			var application = excelEngine.Excel;
+			application.DefaultVersion = ExcelVersion.Excel2013;
+			var workbook = application.Workbooks.Create(1);
+			var worksheet = application.Worksheets[0];
+			worksheet.Range["A1"].Text = "Mã sinh viên";
+			worksheet.Range["B1"].Text = "Họ và tên";
+			worksheet.Range["C1"].Text = "Ngày sinh";
+			worksheet.Range["D1"].Text = "Lớp khóa học";
+			worksheet.Range["E1"].Text = "Mã LHP";
+			worksheet.Range["F1"].Text = "Tên môn học";
+			worksheet.Range["G1"].Text = "Nhóm";
+			worksheet.Range["H1"].Text = "Tín chỉ";
+			worksheet.Range["I1"].Text = "Ghi chú";
+			worksheet.ImportData(_sinhVienCollection, 2, 1, false);
+
+			MemoryStream ms = new MemoryStream();
+			workbook.SaveAs(ms);
+			ms.Position = 0;
+
+			//Saves the memory stream as a file.
+			SaveService saveService = new SaveService();
+			await saveService.SaveAndView("Output.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ms);
+		}
+	}
 	public MainViewModel(DataService dataService)
 	{
 		_dataService = dataService;
 		this.Title = "Tra cứu LMH";
+		_sinhVienCollection = new List<SinhvienLmh>();
 		GetTerms();
 	}
 

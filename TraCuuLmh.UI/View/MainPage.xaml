@@ -11,7 +11,7 @@
     <Grid
         ColumnDefinitions="*, Auto"
         RowDefinitions="Auto, *, Auto"
-        RowSpacing="15">
+        RowSpacing="5">
         <VerticalStackLayout Grid.Row="0">
             <HorizontalStackLayout Margin="5" HorizontalOptions="CenterAndExpand">
                 <Label Text="Học kỳ: " />
@@ -20,39 +20,46 @@
                     ItemsSource="{Binding Terms}"
                     SelectedItem="{Binding Term}"
                     WidthRequest="275" />
-                <Button
-                    Margin="25,0,0,0"
-                    Padding="0"
-                    Command="{Binding SwitchModeCommand}"
-                    CommandParameter="{Binding NextMode}"
-                    HeightRequest="31"
-                    Text="{Binding NextMode}"
-                    WidthRequest="100" />
+
             </HorizontalStackLayout>
             <HorizontalStackLayout Margin="5">
-                <Label Text="Mã sinh viên:" />
-                <Entry Text="{Binding StudentId}" WidthRequest="80" />
-                <Label Text="Mã môn:" />
-                <Entry Text="{Binding SubjectId}" WidthRequest="80" />
+                <Label Text="Mã sinh viên:" VerticalOptions="Center" />
+                <Entry
+                    Placeholder="vd: 2102xxxx"
+                    Text="{Binding StudentId}"
+                    WidthRequest="100" />
+                <Label Text="Mã môn:" VerticalOptions="Center" />
+                <Entry
+                    Placeholder="vd: MAT1041 1"
+                    Text="{Binding SubjectId}"
+                    WidthRequest="110" />
                 <HorizontalStackLayout IsVisible="{Binding IsAdvancedMode}">
-                    <Label Text="Tên sinh viên: " />
+                    <Label Text="Tên sinh viên: " VerticalOptions="Center" />
                     <Entry Text="{Binding StudentName}" />
-                    <Label Text="Tên môn học: " />
+                    <Label Text="Tên môn học: " VerticalOptions="Center" />
                     <Entry Text="{Binding SubjectName}" />
-                    <Label Text="Số lượng: " />
+                    <Label Text="Số lượng: " VerticalOptions="Center" />
                     <Entry
                         Keyboard="Numeric"
                         Placeholder="100"
                         Text="{Binding PageSize, FallbackValue='100'}" />
                 </HorizontalStackLayout>
                 <Button
+                    Padding="2"
+                    Command="{Binding SwitchModeCommand}"
+                    CommandParameter="{Binding NextMode}"
+                    MaximumHeightRequest="35"
+                    Text="{Binding NextMode}"
+                    WidthRequest="100" />
+                <Button
                     Margin="30,0,0,0"
+                    Padding="6"
+                    WidthRequest="100"
                     Command="{Binding GetDataCommand}"
                     ContentLayout="Left, 5"
-                    FontAttributes="Bold"
                     HorizontalOptions="EndAndExpand"
                     ImageSource="search.png"
-                    MaximumHeightRequest="40"
+                    MaximumHeightRequest="35"
                     Text="Tìm kiếm" />
             </HorizontalStackLayout>
 
@@ -66,15 +73,16 @@
             GridLinesVisibility="Both"
             HeaderGridLinesVisibility="Both"
             IsVisible="{Binding IsNotBusy}"
-            ItemsSource="{Binding SinhVienCollection}"
+            ItemsSource="{Binding SinhVienObservableCollection}"
             RowHeight="60"
             VerticalOptions="FillAndExpand">
             <syncfusion:SfDataGrid.DefaultStyle>
                 <syncfusion:DataGridStyle
+                    CurrentCellBorderColor="{StaticResource Primary}"
+                    CurrentCellBorderWidth="3"
                     HeaderRowBackground="{StaticResource Primary}"
                     HeaderRowFontAttributes="Bold"
-                    HeaderRowTextColor="White"
-                    RowTextColor="#212121" />
+                    HeaderRowTextColor="White" />
             </syncfusion:SfDataGrid.DefaultStyle>
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:DataGridTemplateColumn
@@ -96,18 +104,45 @@
                         </DataTemplate>
                     </syncfusion:DataGridTemplateColumn.CellTemplate>
                 </syncfusion:DataGridTemplateColumn>
-                <syncfusion:DataGridTextColumn
+                <syncfusion:DataGridTemplateColumn
                     Width="200"
                     HeaderText="Họ tên"
-                    MappingName="HoVaTen" />
-                <syncfusion:DataGridTextColumn
+                    MappingName="HoVaTen">
+                    <syncfusion:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <HorizontalStackLayout>
+                                <Label Text="{Binding HoVaTen}" VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                        </DataTemplate>
+                    </syncfusion:DataGridTemplateColumn.CellTemplate>
+
+                </syncfusion:DataGridTemplateColumn>
+                <syncfusion:DataGridTemplateColumn
                     Width="130"
                     HeaderText="Ngày sinh"
-                    MappingName="NgaySinh" />
-                <syncfusion:DataGridTextColumn
+                    MappingName="NgaySinh">
+                    <syncfusion:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <HorizontalStackLayout>
+                                <Label Text="{Binding NgaySinh}" VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                        </DataTemplate>
+                    </syncfusion:DataGridTemplateColumn.CellTemplate>
+
+                </syncfusion:DataGridTemplateColumn>
+                <syncfusion:DataGridTemplateColumn
                     Width="200"
                     HeaderText="Lớp khóa học"
-                    MappingName="LopKhoaHoc" />
+                    MappingName="LopKhoaHoc">
+                    <syncfusion:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <HorizontalStackLayout>
+                                <Label Text="{Binding LopKhoaHoc}" VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                        </DataTemplate>
+                    </syncfusion:DataGridTemplateColumn.CellTemplate>
+
+                </syncfusion:DataGridTemplateColumn>
                 <syncfusion:DataGridTemplateColumn
                     Width="140"
                     HeaderText="Mã môn học"
@@ -126,25 +161,58 @@
                                     WidthRequest="25" />
                             </HorizontalStackLayout>
                         </DataTemplate>
-
                     </syncfusion:DataGridTemplateColumn.CellTemplate>
                 </syncfusion:DataGridTemplateColumn>
-                <syncfusion:DataGridTextColumn
+                <syncfusion:DataGridTemplateColumn
                     Width="200"
                     HeaderText="Tên môn học"
-                    MappingName="TenMonHoc" />
-                <syncfusion:DataGridTextColumn
+                    MappingName="TenMonHoc">
+                    <syncfusion:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <HorizontalStackLayout>
+                                <Label Text="{Binding TenMonHoc}" VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                        </DataTemplate>
+                    </syncfusion:DataGridTemplateColumn.CellTemplate>
+                </syncfusion:DataGridTemplateColumn>
+                <syncfusion:DataGridTemplateColumn
                     Width="85"
                     HeaderText="Nhóm"
-                    MappingName="Nhom" />
-                <syncfusion:DataGridTextColumn
-                    Width="50"
+                    MappingName="Nhom">
+                    <syncfusion:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <HorizontalStackLayout>
+                                <Label Text="{Binding Nhom}" VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                        </DataTemplate>
+                    </syncfusion:DataGridTemplateColumn.CellTemplate>
+                </syncfusion:DataGridTemplateColumn>
+                <syncfusion:DataGridTemplateColumn
+                    Width="70"
                     HeaderText="TC"
-                    MappingName="SoTinChi" />
-                <syncfusion:DataGridTextColumn
+                    MappingName="SoTinChi">
+                    <syncfusion:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <HorizontalStackLayout>
+                                <Label Text="{Binding SoTinChi}" VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                        </DataTemplate>
+                    </syncfusion:DataGridTemplateColumn.CellTemplate>
+
+                </syncfusion:DataGridTemplateColumn>
+                <syncfusion:DataGridTemplateColumn
                     Width="110"
                     HeaderText="Ghi chú"
-                    MappingName="GhiChu" />
+                    MappingName="GhiChu">
+                    <syncfusion:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <HorizontalStackLayout>
+                                <Label Text="{Binding GhiChu}" VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                        </DataTemplate>
+                    </syncfusion:DataGridTemplateColumn.CellTemplate>
+
+                </syncfusion:DataGridTemplateColumn>
             </syncfusion:SfDataGrid.Columns>
         </syncfusion:SfDataGrid>
         <ActivityIndicator
@@ -154,6 +222,28 @@
             IsVisible="{Binding IsBusy}"
             WidthRequest="100"
             Color="Blue" />
-        <Label Grid.Row="2" Text="{Binding Notification}" />
+        <Grid Grid.Row="2">
+            <Label Text="{Binding Notification}" />
+            <Button
+                Margin="5"
+                BorderColor="{StaticResource Green}"
+                BorderWidth="1"
+                Command="{Binding SaveToExcelCommand}"
+                MaximumHeightRequest="35"
+                ContentLayout="Left, 5"
+                HorizontalOptions="End"
+                ImageSource="excel.png"
+                Text="To Excel">
+                <Button.Resources>
+                    <ResourceDictionary>
+                        <Style BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
+                            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Green}, Dark={StaticResource Primary}}" />
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}" />
+                        </Style>
+                    </ResourceDictionary>
+                </Button.Resources>
+            </Button>
+        </Grid>
+
     </Grid>
 </ContentPage>

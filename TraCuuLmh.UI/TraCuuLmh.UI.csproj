@@ -12,7 +12,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 
 		<!-- Display name -->
-		<ApplicationTitle>TraCuuLmh.UI</ApplicationTitle>
+		<ApplicationTitle>Tra cứu môn học UET</ApplicationTitle>
 
 		<!-- App Identifier -->
 		<ApplicationId>com.companyname.tracuulmh.ui</ApplicationId>
@@ -32,7 +32,7 @@
 
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\uet1.png" ForegroundFile="Resources\AppIcon\uet1.png" Color="#FEFEFE" />
+		<MauiIcon Include="Resources\AppIcon\uet1.svg" ForegroundFile="Resources\AppIcon\uet1.svg" Color="#FEFEFE" />
 
 		<!-- Splash Screen -->
 		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
@@ -51,8 +51,8 @@
 	<ItemGroup>
 	  <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
 	  <PackageReference Include="HtmlAgilityPack" Version="1.11.43" />
-	  <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
 	  <PackageReference Include="Syncfusion.Maui.DataGrid" Version="20.2.44" />
+	  <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="20.2.0.45" />
 	</ItemGroup>
 
 </Project>

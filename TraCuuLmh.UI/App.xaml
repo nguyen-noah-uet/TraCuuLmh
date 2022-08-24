@@ -11,12 +11,13 @@
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <Style TargetType="Entry">
-                <Setter Property="WidthRequest" Value="100" />
-                <Setter Property="Margin" Value="0, 0, 10, 0" />
+                <Setter Property="VerticalOptions"
+                        Value="Center" />
+                <Setter Property="Margin" Value="0, 0, 25, 0" />
             </Style>
             <Style TargetType="Label">
-                <Setter Property="MinimumWidthRequest" Value="100" />
-                <Setter Property="Margin" Value="10,6,0,10" />
+                <Setter Property="VerticalOptions" Value="Center"/>
+                <Setter Property="Margin" Value="0,0,3,0" />
             </Style>
 
         </ResourceDictionary>
