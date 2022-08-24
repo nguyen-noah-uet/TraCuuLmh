@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="TraCuuLmh.UI.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:model="clr-namespace:TraCuuLmh.UI.Model"
+    xmlns:syncfusion="clr-namespace:Syncfusion.Maui.DataGrid;assembly=Syncfusion.Maui.DataGrid"
+    xmlns:viewmodel="clr-namespace:TraCuuLmh.UI.ViewModel"
+    Title="{Binding Title}"
+    x:DataType="viewmodel:MainViewModel">
+    <Grid
+        ColumnDefinitions="*, Auto"
+        RowDefinitions="Auto, *, Auto"
+        RowSpacing="15">
+        <VerticalStackLayout Grid.Row="0">
+            <HorizontalStackLayout Margin="5" HorizontalOptions="CenterAndExpand">
+                <Label Text="Học kỳ: " />
+                <Picker
+                    ItemDisplayBinding="{Binding Path=TermName}"
+                    ItemsSource="{Binding Terms}"
+                    SelectedItem="{Binding Term}"
+                    WidthRequest="275" />
+                <Button
+                    Margin="25,0,0,0"
+                    Padding="0"
+                    Command="{Binding SwitchModeCommand}"
+                    CommandParameter="{Binding NextMode}"
+                    HeightRequest="31"
+                    Text="{Binding NextMode}"
+                    WidthRequest="100" />
+            </HorizontalStackLayout>
+            <HorizontalStackLayout Margin="5">
+                <Label Text="Mã sinh viên:" />
+                <Entry Text="{Binding StudentId}" WidthRequest="80" />
+                <Label Text="Mã môn:" />
+                <Entry Text="{Binding SubjectId}" WidthRequest="80" />
+                <HorizontalStackLayout IsVisible="{Binding IsAdvancedMode}">
+                    <Label Text="Tên sinh viên: " />
+                    <Entry Text="{Binding StudentName}" />
+                    <Label Text="Tên môn học: " />
+                    <Entry Text="{Binding SubjectName}" />
+                    <Label Text="Số lượng: " />
+                    <Entry
+                        Keyboard="Numeric"
+                        Placeholder="100"
+                        Text="{Binding PageSize, FallbackValue='100'}" />
+                </HorizontalStackLayout>
+                <Button
+                    Margin="30,0,0,0"
+                    Command="{Binding GetDataCommand}"
+                    ContentLayout="Left, 5"
+                    FontAttributes="Bold"
+                    HorizontalOptions="EndAndExpand"
+                    ImageSource="search.png"
+                    MaximumHeightRequest="40"
+                    Text="Tìm kiếm" />
+            </HorizontalStackLayout>
+
+        </VerticalStackLayout>
+
+        <syncfusion:SfDataGrid
+            Grid.Row="1"
+            Margin="0,0,0,15"
+            AutoGenerateColumnsMode="None"
+            ColumnWidthMode="Auto"
+            GridLinesVisibility="Both"
+            HeaderGridLinesVisibility="Both"
+            IsVisible="{Binding IsNotBusy}"
+            ItemsSource="{Binding SinhVienCollection}"
+            RowHeight="60"
+            VerticalOptions="FillAndExpand">
+            <syncfusion:SfDataGrid.DefaultStyle>
+                <syncfusion:DataGridStyle
+                    HeaderRowBackground="{StaticResource Primary}"
+                    HeaderRowFontAttributes="Bold"
+                    HeaderRowTextColor="White"
+                    RowTextColor="#212121" />
+            </syncfusion:SfDataGrid.DefaultStyle>
+            <syncfusion:SfDataGrid.Columns>
+                <syncfusion:DataGridTemplateColumn
+                    Width="140"
+                    HeaderText="Mã sinh viên"
+                    MappingName="MaSv">
+                    <syncfusion:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <HorizontalStackLayout>
+                                <Label Text="{Binding MaSv}" VerticalOptions="Center" />
+                                <ImageButton
+                                    Grid.Column="1"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=CopyToClipboardCommand}"
+                                    CommandParameter="{Binding MaSv}"
+                                    HeightRequest="25"
+                                    Source="copy_01.png"
+                                    WidthRequest="25" />
+                            </HorizontalStackLayout>
+                        </DataTemplate>
+                    </syncfusion:DataGridTemplateColumn.CellTemplate>
+                </syncfusion:DataGridTemplateColumn>
+                <syncfusion:DataGridTextColumn
+                    Width="200"
+                    HeaderText="Họ tên"
+                    MappingName="HoVaTen" />
+                <syncfusion:DataGridTextColumn
+                    Width="130"
+                    HeaderText="Ngày sinh"
+                    MappingName="NgaySinh" />
+                <syncfusion:DataGridTextColumn
+                    Width="200"
+                    HeaderText="Lớp khóa học"
+                    MappingName="LopKhoaHoc" />
+                <syncfusion:DataGridTemplateColumn
+                    Width="140"
+                    HeaderText="Mã môn học"
+                    MappingName="TenLopMonHoc">
+                    <syncfusion:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <HorizontalStackLayout>
+                                <Label Text="{Binding TenLopMonHoc}" VerticalOptions="Center" />
+                                <ImageButton
+                                    Grid.Column="1"
+                                    Padding="0"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=CopyToClipboardCommand}"
+                                    CommandParameter="{Binding TenLopMonHoc}"
+                                    HeightRequest="25"
+                                    Source="copy_01.png"
+                                    WidthRequest="25" />
+                            </HorizontalStackLayout>
+                        </DataTemplate>
+
+                    </syncfusion:DataGridTemplateColumn.CellTemplate>
+                </syncfusion:DataGridTemplateColumn>
+                <syncfusion:DataGridTextColumn
+                    Width="200"
+                    HeaderText="Tên môn học"
+                    MappingName="TenMonHoc" />
+                <syncfusion:DataGridTextColumn
+                    Width="85"
+                    HeaderText="Nhóm"
+                    MappingName="Nhom" />
+                <syncfusion:DataGridTextColumn
+                    Width="50"
+                    HeaderText="TC"
+                    MappingName="SoTinChi" />
+                <syncfusion:DataGridTextColumn
+                    Width="110"
+                    HeaderText="Ghi chú"
+                    MappingName="GhiChu" />
+            </syncfusion:SfDataGrid.Columns>
+        </syncfusion:SfDataGrid>
+        <ActivityIndicator
+            Grid.Row="1"
+            HeightRequest="100"
+            IsRunning="{Binding IsBusy}"
+            IsVisible="{Binding IsBusy}"
+            WidthRequest="100"
+            Color="Blue" />
+        <Label Grid.Row="2" Text="{Binding Notification}" />
+    </Grid>
+</ContentPage>
