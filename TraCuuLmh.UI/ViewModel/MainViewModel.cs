@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using TraCuuLmh.UI.Model;
 using TraCuuLmh.UI.Service;
 using static System.Int32;
+using Color = Syncfusion.Drawing.Color;
 
 namespace TraCuuLmh.UI.ViewModel;
 
@@ -42,6 +43,9 @@ public partial class MainViewModel : BaseViewModel
 	[ObservableProperty]
 	private string _notification;
 
+	[ObservableProperty]
+	private bool _canSave;
+
 
 	[RelayCommand]
 	public async Task GetData()
@@ -49,6 +53,7 @@ public partial class MainViewModel : BaseViewModel
 		try
 		{
 			IsBusy = true;
+			CanSave = false;
 			_sinhVienCollection.Clear();
 			SinhVienObservableCollection.Clear();
 			Term ??= Terms.Last();
@@ -71,6 +76,7 @@ public partial class MainViewModel : BaseViewModel
 		finally
 		{
 			Notification = $"Tìm thấy {SinhVienObservableCollection?.Count} kết quả.";
+			CanSave = SinhVienObservableCollection?.Count > 0;
 			IsBusy = false;
 		}
 
@@ -103,7 +109,7 @@ public partial class MainViewModel : BaseViewModel
 		{
 			var application = excelEngine.Excel;
 			application.DefaultVersion = ExcelVersion.Excel2013;
-			var workbook = application.Workbooks.Create(1);
+			var workbook = application.Workbooks.Create(new[] { "Output" });
 			var worksheet = application.Worksheets[0];
 			worksheet.Range["A1"].Text = "Mã sinh viên";
 			worksheet.Range["B1"].Text = "Họ và tên";
@@ -114,9 +120,24 @@ public partial class MainViewModel : BaseViewModel
 			worksheet.Range["G1"].Text = "Nhóm";
 			worksheet.Range["H1"].Text = "Tín chỉ";
 			worksheet.Range["I1"].Text = "Ghi chú";
+			worksheet.Range["A1:I1"].CellStyle.Font.Bold = true;
+			worksheet.Range["A1:I1"].CellStyle.Color = Color.FromArgb(42, 118, 189);
+			worksheet.Range["A1:I1"].CellStyle.Font.Color = ExcelKnownColors.White;
+			worksheet.Range["A1:I1000"].AutofitColumns();
+			worksheet.Range["A1:I1000"].AutofitRows();
+
 			worksheet.ImportData(_sinhVienCollection, 2, 1, false);
 
 			MemoryStream ms = new MemoryStream();
+			try
+			{
+				var sheet2 = workbook.Worksheets[1];
+				sheet2.Visibility = WorksheetVisibility.Hidden;
+			}
+			catch
+			{
+				// ignore
+			}
 			workbook.SaveAs(ms);
 			ms.Position = 0;
 

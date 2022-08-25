@@ -42,10 +42,10 @@ namespace TraCuuLmh.UI.Service
 					outstream.Flush();
 				}
 				//Create message dialog box. 
-				MessageDialog msgDialog = new("Do you want to view the document?", "File has been created successfully");
-				UICommand yesCmd = new("Yes");
+				MessageDialog msgDialog = new("Bạn có muốn mở file không?", "Tạo file thành công.");
+				UICommand yesCmd = new("OK");
 				msgDialog.Commands.Add(yesCmd);
-				UICommand noCmd = new("No");
+				UICommand noCmd = new("Không");
 				msgDialog.Commands.Add(noCmd);
 
 				WinRT.Interop.InitializeWithWindow.Initialize(msgDialog, windowHandle);
